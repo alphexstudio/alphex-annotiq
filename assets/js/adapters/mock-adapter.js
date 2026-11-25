@@ -19,6 +19,7 @@
   async function handle(method, path, body) {
     await new Promise(r => setTimeout(r, 250)); body = body || {};
     const [p, qs] = path.split('?'), q = Object.fromEntries(new URLSearchParams(qs || '')), r = method + ' ' + p;
+    const x = A.mock.ext && await A.mock.ext(method, p, q, body); if (x) return x;
     switch (r) {
       case 'POST /auth/login': if (!body.email || !body.password) throw E(422, 'VALIDATION', 'Email and password are required.'); return ok({ user: signIn(body.email, nm(body.email)), token: null });
       case 'POST /auth/register': if (!body.name || !body.email || (body.password || '').length < 8) throw E(422, 'VALIDATION', 'Name, email and a password of at least 8 characters are required.');
