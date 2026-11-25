@@ -32,4 +32,5 @@
   /* Single switch between mock and real backend. Services only ever call A.util.call. */
   A.transport = (m, p, b) => C.MODE === 'mock' ? A.mock.handle(m, p, b) : request(m, p, { body: b });
   A.util.call = (m, p, b) => A.transport(m, p, b).then(r => r.data);
+  A.util.page = (p, o) => A.transport('GET', p + A.util.qs(o)).then(r => ({ items: r.data, total: (r.meta && r.meta.total) || r.data.length, meta: r.meta || {} }));
 })(window.Alphex);
