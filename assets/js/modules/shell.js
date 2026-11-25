@@ -2,7 +2,7 @@
    Entry format: [label, lucide icon, href, planned phase]. Only pages listed in BUILT are linked; others show a notice. */
 (function (A) {
   const U = A.util, esc = U.esc, root = document.body.dataset.root || '', $ = s => document.querySelector(s);
-  const BUILT = ['dashboard/index.html'];
+  const BUILT = ['dashboard/index.html', 'dashboard/projects.html', 'dashboard/datasets.html'];
   const NAV = [['Workspace', [['Overview', 'layout-dashboard', 'dashboard/index.html'], ['Projects', 'folder-kanban', 'dashboard/projects.html', 2], ['Datasets', 'database', 'dashboard/datasets.html', 2]]],
     ['Annotation', [['Text Annotation', 'text-cursor-input', 'workspace/text-annotation.html', 3], ['Image Annotation', 'image', 'workspace/image-annotation.html', 4], ['Video Annotation', 'video', '', 0], ['Audio Annotation', 'audio-lines', '', 0], ['Multimodal Annotation', 'layers', '', 0]]],
     ['Evaluation', [['AI Response Evaluation', 'scale', 'workspace/ai-evaluation.html', 3], ['Response Comparison', 'columns-2', 'workspace/ai-evaluation.html#compare', 3], ['Rubric Evaluation', 'list-checks', 'workspace/ai-evaluation.html#rubric', 3], ['Evaluation History', 'history', 'workspace/ai-evaluation.html#history', 3]]],
@@ -10,7 +10,7 @@
     ['Organization', [['Team Members', 'users', 'dashboard/team.html', 5], ['Roles & Permissions', 'shield-check', 'dashboard/team.html#roles', 5], ['Activity Logs', 'activity', 'dashboard/team.html#logs', 5]]]];
   const BOTTOM = [['Documentation', 'book-open', '', 6], ['Settings', 'settings', 'dashboard/settings.html', 6]];
   const ALL = NAV.flatMap(g => g[1]).concat(BOTTOM);
-  const link = ([l, i, h, ph]) => { const on = BUILT.includes(h), cur = on && location.pathname.endsWith(h);
+  const link = ([l, i, h, ph]) => { const on = BUILT.includes(h), cur = on && (location.pathname.endsWith(h) || location.pathname.endsWith(h.replace('s.html', '.html')));
     return '<a href="' + (on ? root + h : '#') + '"' + (cur ? ' class="cur" aria-current="page"' : '') + ' data-label="' + esc(l) + '" title="' + esc(l) + '"><i data-lucide="' + i + '"></i><span class="lbl">' + esc(l) + '</span>' + (!on && ph === 0 ? '<em class="badge">Soon</em>' : '') + '</a>'; };
   function go(label) { const it = ALL.find(x => x[0] === label); if (it && BUILT.includes(it[2])) { location.href = root + it[2]; return; }
     U.toast(label + (it && it[3] === 0 ? ' is coming soon.' : ' is not built yet. It is planned for Phase ' + (it ? it[3] : '?') + '.')); }
