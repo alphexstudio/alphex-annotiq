@@ -2,7 +2,7 @@
    Entry format: [label, lucide icon, href, planned phase]. Only pages listed in BUILT are linked; others show a notice. */
 (function (A) {
   const U = A.util, esc = U.esc, root = document.body.dataset.root || '', $ = s => document.querySelector(s);
-  const BUILT = ['dashboard/index.html', 'dashboard/projects.html', 'dashboard/datasets.html'];
+  const BUILT = ['dashboard/index.html', 'dashboard/projects.html', 'dashboard/datasets.html', 'workspace/text-annotation.html', 'workspace/ai-evaluation.html', 'workspace/review.html'];
   const NAV = [['Workspace', [['Overview', 'layout-dashboard', 'dashboard/index.html'], ['Projects', 'folder-kanban', 'dashboard/projects.html', 2], ['Datasets', 'database', 'dashboard/datasets.html', 2]]],
     ['Annotation', [['Text Annotation', 'text-cursor-input', 'workspace/text-annotation.html', 3], ['Image Annotation', 'image', 'workspace/image-annotation.html', 4], ['Video Annotation', 'video', '', 0], ['Audio Annotation', 'audio-lines', '', 0], ['Multimodal Annotation', 'layers', '', 0]]],
     ['Evaluation', [['AI Response Evaluation', 'scale', 'workspace/ai-evaluation.html', 3], ['Response Comparison', 'columns-2', 'workspace/ai-evaluation.html#compare', 3], ['Rubric Evaluation', 'list-checks', 'workspace/ai-evaluation.html#rubric', 3], ['Evaluation History', 'history', 'workspace/ai-evaluation.html#history', 3]]],
