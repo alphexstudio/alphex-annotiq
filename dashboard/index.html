@@ -1,0 +1,21 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#000000"><title>Overview | Alphex Workbench</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="../assets/css/app.css"></head>
+<body data-root="../"><div class="app" id="shell"><aside class="sidebar" id="sidebar" aria-label="Main navigation"></aside><div class="scrim" id="scrim"></div>
+<div class="main"><header class="top" id="topbar"></header><main class="page" id="page">
+<div class="pagehead"><h1 id="hello">Welcome</h1><p id="sub"></p></div>
+<div class="card" id="err" hidden role="alert"><h2>Could not load dashboard data</h2><p class="mu" id="err-msg" style="margin:6px 0 12px"></p><button class="btn sec" id="retry" type="button">Retry</button></div>
+<section class="metrics" id="metrics" aria-label="Overview metrics"></section>
+<div class="cols"><section class="card"><h2>Recent projects</h2><div class="scroll" id="projects"></div></section><section class="card"><h2>Work distribution</h2><div id="dist"></div></section>
+<section class="card"><h2>Recent activity</h2><ul class="act" id="activity"></ul></section><section class="card"><h2>Quick actions</h2><div class="qa" id="qa"></div></section></div>
+</main></div></div>
+<dialog id="dlg" aria-labelledby="dt"><form id="pf"><h2 id="dt">Create project</h2><p class="mu" id="pnote"></p>
+<div class="fld"><label for="pn">Project name</label><input id="pn" name="name" required maxlength="120"></div>
+<div class="fld"><label for="pd">Description</label><textarea id="pd" name="description"></textarea></div>
+<div class="two"><div class="fld"><label for="pt">Project category</label><select id="pt" name="type"><option value="text_annotation">Text Annotation</option><option value="image_annotation">Image Annotation</option><option value="ai_response_evaluation">AI Response Evaluation</option><option value="multimodal_annotation">Multimodal Annotation</option></select></div>
+<div class="fld"><label for="pa">Annotation type</label><select id="pa" name="annotation_type"><option value="classification">Classification</option><option value="ner">Named entity recognition</option><option value="bounding_box">Bounding box</option><option value="polygon">Polygon</option><option value="response_rating">Response rating</option><option value="response_comparison">Response comparison</option></select></div></div>
+<div class="two"><div class="fld"><label for="porg">Organization</label><select id="porg" name="organization_id"></select></div><div class="fld"><label for="ps">Status</label><select id="ps" name="status"><option value="draft">Draft</option><option value="active">Active</option></select></div></div>
+<div class="fld"><label for="pg">Guidelines</label><textarea id="pg" name="guidelines"></textarea></div>
+<p class="msg" id="perr" role="alert"></p><div class="acts"><button class="btn sec" id="pcancel" type="button">Cancel</button><button class="btn pri" id="psave" type="submit">Create project</button></div></form></dialog>
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.383.0/dist/umd/lucide.min.js"></script>
+<script src="../assets/js/core/config.js"></script><script src="../assets/js/core/state.js"></script><script src="../assets/js/core/api-client.js"></script><script src="../assets/js/adapters/mock-adapter.js"></script><script src="../assets/js/core/auth-service.js"></script>
+<script src="../assets/js/services/project-service.js"></script><script src="../assets/js/services/analytics-service.js"></script><script src="../assets/js/services/team-service.js"></script><script src="../assets/js/modules/shell.js"></script><script src="../assets/js/modules/dashboard.js"></script></body></html>
