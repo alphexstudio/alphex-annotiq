@@ -32,15 +32,7 @@
     $('#qa').innerHTML = QA.map(([l, i, t]) => '<button class="btn sec" type="button" data-t="' + esc(t) + '"><i data-lucide="' + i + '"></i>' + l + '</button>').join('');
     $('#qa').onclick = e => { const b = e.target.closest('button'); if (!b) return; b.dataset.t ? A.shell.go(b.dataset.t) : document.dispatchEvent(new CustomEvent('alphex:create-project')); };
     $('#retry').onclick = load; A.state.on('org', load);
-    if (mock) $('#pnote').textContent = 'Mock mode: saved in this browser only.';
-    document.addEventListener('alphex:create-project', () => { $('#porg').innerHTML = (A.state.get('orgs') || []).map(o => '<option value="' + esc(o.id) + '"' + (o.id === A.state.get('org') ? ' selected' : '') + '>' + esc(o.name) + '</option>').join(''); $('#perr').textContent = ''; $('#dlg').showModal(); });
-    $('#pcancel').onclick = () => $('#dlg').close();
-    $('#pf').addEventListener('submit', async e => {
-      e.preventDefault(); const f = e.target, b = $('#psave'), d = Object.fromEntries(new FormData(f)); b.disabled = true; $('#perr').textContent = '';
-      try { await A.projects.create({ name: d.name, description: d.description, type: d.type, annotation_type: d.annotation_type, organization_id: d.organization_id, guidelines: d.guidelines, status: d.status });
-        $('#dlg').close(); f.reset(); U.toast('Project created.'); load(); }
-      catch (err) { $('#perr').textContent = err.message; } finally { b.disabled = false; }
-    });
+    document.addEventListener('alphex:project-saved', load);
   }
   (async () => {
     try {
