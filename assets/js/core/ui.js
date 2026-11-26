@@ -2,7 +2,7 @@
 (function (A) {
   const U = A.util, esc = U.esc;
   const ANN = { text_annotation: [['text_classification', 'Text Classification'], ['ner', 'Named Entity Recognition'], ['span_annotation', 'Span Annotation'], ['multilabel_classification', 'Multi-label Text Classification']],
-    image_annotation: [['image_classification', 'Image Classification'], ['bounding_boxes', 'Bounding Boxes'], ['polygon', 'Polygon Annotation'], ['segmentation', 'Image Segmentation']],
+    image_annotation: [['image_classification', 'Image Classification'], ['bounding_boxes', 'Bounding Boxes'], ['polygon', 'Polygon Annotation'], ['segmentation', 'Image Segmentation'], ['point_annotation', 'Point Annotation']],
     ai_response_evaluation: [['single_response', 'Single Response Evaluation'], ['side_by_side', 'Side-by-Side Comparison'], ['rubric', 'Rubric-Based Evaluation'], ['ranking', 'Response Ranking']],
     multimodal_evaluation: [['multimodal', 'Multimodal Annotation']] };
   A.ui = {
