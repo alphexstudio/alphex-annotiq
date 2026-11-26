@@ -2,7 +2,7 @@
    They do not test the DOM. See tests/ui-smoke.py for the browser smoke test. */
 const vm = require('vm'), fs = require('fs'), path = require('path'), assert = require('assert');
 const root = path.join(__dirname, '..', 'assets', 'js/');
-const FILES = 'core/config.js core/state.js core/api-client.js core/ui.js core/task-model.js adapters/mock-adapter.js adapters/mock-data.js adapters/mock-tasks.js core/auth-service.js services/project-service.js services/dataset-service.js services/dataset-parser.js services/task-service.js services/annotation-service.js services/evaluation-service.js services/review-service.js modules/text-render.js modules/eval-render.js'.split(' ');
+const FILES = 'core/config.js core/state.js core/api-client.js core/ui.js core/geometry.js core/task-model.js adapters/mock-adapter.js adapters/mock-data.js adapters/mock-tasks.js core/auth-service.js services/project-service.js services/dataset-service.js services/dataset-parser.js services/task-service.js services/annotation-service.js services/evaluation-service.js services/review-service.js modules/text-render.js modules/eval-render.js'.split(' ');
 const store = () => { const m = {}; return { getItem: k => k in m ? m[k] : null, setItem: (k, v) => { m[k] = String(v); }, removeItem: k => { delete m[k]; } }; };
 const LS = store(), SS = store();
 function boot() { const c = { localStorage: LS, sessionStorage: SS, URLSearchParams, console, setTimeout: f => { f(); return 0; }, clearTimeout() {}, Date }; c.window = c; vm.createContext(c); FILES.forEach(f => vm.runInContext(fs.readFileSync(root + f, 'utf8'), c, { filename: f })); return c.Alphex; }
