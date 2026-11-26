@@ -13,11 +13,12 @@
   async function open(i) {
     const t = rows[i]; let P; try { P = await A.projects.get(t.project_id); } catch (e) { return U.toast(e.message); }
     const ann = !!t.annotation, d = ann ? t.annotation.annotation_data : t.evaluation.evaluation_data, L = M.config(P).labels; let body;
-    if (ann) body = M.mode(P) === 'cls' ? '<p>' + (d.labels || []).map(l => ui.badge(l, true)).join(' ') + '</p><div class="doc">' + esc(t.payload.text) + '</div>' : '<div class="doc">' + A.textui.html(t.payload.text, d.spans || [], L) + '</div><p class="small">' + (d.spans || []).length + ' span(s).</p>';
+    if (ann && M.IMG.includes(M.mode(P))) body = '<div class="stage" id="rv-img" style="height:360px"></div><div id="rv-list"></div>'; else if (ann) body = M.mode(P) === 'cls' ? '<p>' + (d.labels || []).map(l => ui.badge(l, true)).join(' ') + '</p><div class="doc">' + esc(t.payload.text) + '</div>' : '<div class="doc">' + A.textui.html(t.payload.text, d.spans || [], L) + '</div><p class="small">' + (d.spans || []).length + ' span(s).</p>';
     else body = A.evalui.detail(P, t, d);
     const past = t.reviews.length ? '<h2 style="margin-top:16px">Previous reviews</h2><ul class="iss">' + t.reviews.map(r => '<li>' + esc(r.decision) + ': ' + esc(r.comments || 'No comments') + '</li>').join('') + '</ul>' : '';
     const dl = ui.dialog('<h2>' + esc(t.id) + '</h2><p class="small">' + esc(t.project_name) + ', ' + (ann ? 'annotation' : 'evaluation') + ', version ' + (t.annotation || t.evaluation).version + '</p>' + body + past +
       (S.status === 'pending' ? '<label class="fld">Reviewer comments (required to reject)<textarea id="rc" maxlength="2000"></textarea></label><p class="msg" id="rm" role="alert"></p><div class="acts"><button class="btn sec" type="button" data-x>Close</button><button class="btn sec" type="button" data-d="rejected">Reject</button><button class="btn pri" type="button" data-d="approved">Approve</button></div>' : '<div class="acts"><button class="btn sec" type="button" data-x>Close</button></div>'), 'wide');
+    if (dl.querySelector('#rv-img')) A.ImageCanvas.view(dl.querySelector('#rv-img'), dl.querySelector('#rv-list'), P, t, d);
     dl.onclick = async e => { const b = e.target.closest('button'); if (!b) return; if (b.hasAttribute('data-x')) return dl.close(); const c = dl.querySelector('#rc').value.trim();
       if (b.dataset.d === 'rejected' && !c) { dl.querySelector('#rm').textContent = 'Add a comment explaining what to fix.'; return; }
       try { await A.reviews.decide(t.id, b.dataset.d, c); dl.close(); U.toast(b.dataset.d === 'approved' ? 'Approved.' : 'Returned to the annotator for revision.'); load(); } catch (er) { dl.querySelector('#rm').textContent = er.message; } };
