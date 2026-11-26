@@ -7,7 +7,7 @@
   const dlg = (h, ok) => new Promise(res => { const d = ui.dialog('<h2>Review before submitting</h2>' + h + '<div class="acts"><button class="btn sec" type="button" value="0">Go back</button><button class="btn pri" type="button" value="1">' + esc(ok) + '</button></div>', 'wide'); let v = false;
     d.addEventListener('click', e => { const b = e.target.closest('button'); if (b) { v = b.value === '1'; d.close(); } }); d.addEventListener('close', () => res(v)); });
   function start(pl) {
-    const c = { P: null, CFG: null, mode: null, task: null, data: null, readOnly: false, blocked: false, dirty: false, list: [], filter: '', touch, flash }; let seq = 0, timer = null; const dsn = {};
+    const c = { P: null, CFG: null, mode: null, task: null, data: null, readOnly: false, blocked: false, dirty: false, list: [], filter: '', touch, flash }; let seq = 0, timer = null; const dsn = {}; A.ws.ctx = c;
     const me = () => A.auth.user && A.auth.user.id, shown = () => c.list.filter(t => !c.filter || t.status === c.filter);
     function flash(t) { $('#flash').textContent = t || ''; }
     function setSave(t) { $('#sv').textContent = t; }
@@ -21,7 +21,7 @@
     async function flush() { clearTimeout(timer); if (!c.dirty) return true; if (await save()) return true; return ui.confirm('Unsaved changes', 'Your latest changes could not be saved. Leave anyway and lose them?', 'Leave'); }
     function drawList() {
       $('#tf').innerHTML = ST.map(([v, l]) => '<option value="' + v + '"' + (v === c.filter ? ' selected' : '') + '>' + l + '</option>').join(''); const s = shown();
-      $('#tlist').innerHTML = s.length ? s.map(t => '<li><button type="button" data-id="' + esc(t.id) + '"' + (c.task && t.id === c.task.id ? ' aria-current="true"' : '') + '><span><b>#' + t.index + '</b> ' + ui.badge(LBL[t.status] + (t.review_status !== 'none' ? ', ' + t.review_status : ''), t.status === 'completed') + '</span><span class="trunc">' + esc((t.payload.text || t.payload.prompt || '').slice(0, 60)) + '</span></button></li>').join('') : '<li class="mu small">No tasks match.</li>';
+      $('#tlist').innerHTML = s.length ? s.map(t => '<li><button type="button" data-id="' + esc(t.id) + '"' + (c.task && t.id === c.task.id ? ' aria-current="true"' : '') + '><span><b>#' + t.index + '</b> ' + ui.badge(LBL[t.status] + (t.review_status !== 'none' ? ', ' + t.review_status : ''), t.status === 'completed') + '</span><span class="trunc">' + esc((t.payload.text || t.payload.prompt || (t.payload.image && t.payload.image.filename) || '').slice(0, 60)) + '</span></button></li>').join('') : '<li class="mu small">No tasks match.</li>';
     }
     function drawBar() {
       const s = shown(), i = s.findIndex(t => t.id === c.task.id), done = c.list.filter(t => t.status === 'completed').length;
@@ -31,7 +31,7 @@
     function chips() {
       const t = c.task, done = c.list.filter(x => x.status === 'completed').length;
       if (dsn[t.dataset_id] === undefined) { dsn[t.dataset_id] = null; A.datasets.get(t.dataset_id).then(d => { dsn[t.dataset_id] = d.name; chips(); }).catch(() => { dsn[t.dataset_id] = t.dataset_id; chips(); }); }
-      $('#chips').innerHTML = [['Task', esc(t.id)], ['Project', '<a href="../dashboard/project.html?id=' + esc(c.P.id) + '">' + esc(c.P.name) + '</a>'], ['Dataset', esc(dsn[t.dataset_id] || '...')], [pl.who, esc(t.assigned_to_name || 'Unassigned')], ['Status', esc(LBL[t.status])], ['Progress', done + '/' + c.list.length]].map(([k, v]) => '<span class="badge">' + k + ': <b>' + v + '</b></span>').join('');
+      $('#chips').innerHTML = [['Task', esc(t.id)], ['Project', '<a href="../dashboard/project.html?id=' + esc(c.P.id) + '">' + esc(c.P.name) + '</a>'], ['Dataset', esc(dsn[t.dataset_id] || '...')], [pl.who, esc(t.assigned_to_name || 'Unassigned')], ['Status', esc(LBL[t.status])], ['Progress', done + '/' + c.list.length]].concat(pl.chips ? pl.chips(c) : []).map(([k, v]) => '<span class="badge">' + k + ': <b>' + v + '</b></span>').join('');
     }
     function banner() {
       const t = c.task, rv = (t.reviews || []).slice(-1)[0]; let h = '';
