@@ -19,7 +19,7 @@
   async function projectFilter() { try { const ps = await A.projects.list({ organization_id: A.state.get('org'), limit: 100 }); $('#fp').innerHTML = '<option value="">All projects</option>' + ps.map(p => '<option value="' + esc(p.id) + '">' + esc(p.name) + '</option>').join(''); $('#fp').value = S.project_id; } catch (e) { U.toast('Could not load projects: ' + e.message); } }
   function wire() {
     const q = new URLSearchParams(location.search); S.project_id = q.get('project') || ''; projectFilter();
-    $('#list').onclick = e => { const b = e.target.closest('[data-act]'); if (b) act(b.dataset.act, b.dataset.id); }; $('#up').onclick = () => A.datasetForms.upload(S.project_id);
+    $('#list').onclick = e => { const b = e.target.closest('[data-act]'); if (b) act(b.dataset.act, b.dataset.id); }; $('#up').onclick = () => A.datasetForms.upload(S.project_id); $('#upi').onclick = () => A.imageImport.open(S.project_id);
     $('#q').oninput = ui.debounce(e => { S.q = e.target.value.trim(); S.page = 1; load(); });
     [['fp', 'project_id'], ['ff', 'format'], ['fv', 'status']].forEach(([i, k]) => { $('#' + i).onchange = e => { S[k] = e.target.value; S.page = 1; load(); }; });
     $('#so').onchange = e => { [S.sort, S.order] = e.target.value.split(':'); S.page = 1; load(); };
