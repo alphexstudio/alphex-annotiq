@@ -5,11 +5,11 @@
   const actl = l => l.length ? '<ul class="act">' + l.map(a => '<li><i data-lucide="activity"></i><div>' + esc(a.summary) + '<time>' + esc(a.actor_name || '') + ', ' + U.ago(a.created_at) + '</time></div></li>').join('') + '</ul>' : '<p class="mu">No activity yet.</p>';
   const ann = () => ((ui.ANN[P.type] || []).find(x => x[0] === P.annotation_type) || [0, P.annotation_type || '-'])[1];
   const stack = '<span class="stack">';
-  const WS = { cls: 'text-annotation', ner: 'text-annotation', span: 'text-annotation', single: 'ai-evaluation', side: 'ai-evaluation', rubric: 'ai-evaluation', ranking: 'ai-evaluation' };
+  const WS = { cls: 'text-annotation', ner: 'text-annotation', span: 'text-annotation', single: 'ai-evaluation', side: 'ai-evaluation', rubric: 'ai-evaluation', ranking: 'ai-evaluation', icls: 'image-annotation', bbox: 'image-annotation', poly: 'image-annotation', point: 'image-annotation', seg: 'image-annotation' };
   function tasksPanel() {
     if (TKerr) return '<section class="card">' + ui.fail(TKerr) + '</section>'; const w = WS[A.model.mode(P)], n = s => TK.filter(t => t.status === s).length;
     const L = { unassigned: 'Unassigned', assigned: 'Assigned', in_progress: 'In progress', completed: 'Completed', skipped: 'Skipped' };
-    return '<section class="card"><div class="tool" style="justify-content:space-between"><h2>Tasks (' + TKn + ')</h2><span class="ra">' + (w ? '<a class="btn pri" href="../workspace/' + w + '.html?project=' + esc(id) + '">Open workspace</a>' : '') + '<button class="btn sec" type="button" data-act="gen">Generate tasks</button><button class="btn sec" type="button" data-act="cfg">Configure workspace</button></span></div>' +
+    return '<section class="card"><div class="tool" style="justify-content:space-between"><h2>Tasks (' + TKn + ')</h2><span class="ra">' + (w ? '<a class="btn pri" href="../workspace/' + w + '.html?project=' + esc(id) + '">Open workspace</a>' : '') + '<button class="btn sec" type="button" data-act="gen">Generate tasks</button><button class="btn sec" type="button" data-act="cfg">Configure workspace</button>' + (A.model.IMG.includes(A.model.mode(P)) ? '<button class="btn sec" type="button" data-act="exp">Export</button>' : '') + '</span></div>' +
       (w ? '' : '<p class="mu">This project type has no workspace yet.</p>') + (mock ? '<p class="small">Mock mode: tasks are generated in this browser from dataset records (up to 25 per dataset). No multi-user sync.</p>' : '') +
       (TK.length ? '<p>' + Object.keys(L).map(k => ui.badge(L[k] + ' ' + n(k))).join(' ') + '</p><div class="scroll"><table class="tbl"><thead><tr><th>Task</th><th>Status</th><th>Review</th><th>Assigned to</th><th></th></tr></thead><tbody>' + TK.map(t => '<tr><td>' + esc(t.id) + '</td><td>' + esc(L[t.status]) + '</td><td>' + esc(t.review_status) + '</td><td>' + esc(t.assigned_to_name || '-') + '</td><td>' + (w ? '<a href="../workspace/' + w + '.html?project=' + esc(id) + '&task=' + esc(t.id) + '">Open</a>' : '') + '</td></tr>').join('') + '</tbody></table></div>' + (TKn > TK.length ? '<p class="small">Showing the first ' + TK.length + ' tasks.</p>' : '') : ui.empty('No tasks yet. Generate tasks from this project\'s datasets.')) + '</section>';
   }
@@ -37,7 +37,7 @@
     catch (e) { $('#panel').innerHTML = e.status === 404 ? ui.empty('Project not found. It may have been deleted.', '<a class="btn sec" href="projects.html">Back to projects</a>') : ui.fail(e); }
   }
   async function act(a) {
-    if (a === 'retry') return load(); if (a === 'gen') return gen(); if (a === 'cfg') return A.wsConfig.open(P); if (a === 'edit') return A.projectForm.open(P);
+    if (a === 'retry') return load(); if (a === 'gen') return gen(); if (a === 'cfg') return A.wsConfig.open(P); if (a === 'exp') return A.exporter.openDialog(P); if (a === 'edit') return A.projectForm.open(P);
     try {
       if (a === 'archive' && await ui.confirm('Archive project', 'Archive "' + P.name + '"? It will be hidden from the default project list.', 'Archive')) { await A.projects.archive(id); U.toast('Project archived.'); load(); }
       if (a === 'delete' && await ui.confirm('Delete project', 'Permanently delete "' + P.name + '"? Its datasets stay but become unassigned. This cannot be undone.')) { await A.projects.remove(id); location.href = 'projects.html'; }
